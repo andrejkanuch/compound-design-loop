@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "compound-design-loop",
+  "metadata": {
+    "description": "The Compound Design Loop — multi-persona brainstorm + iterative Impeccable command loop for production-grade UI redesign."
+  },
+  "owner": {
+    "name": "Andrej Kanuch",
+    "email": "kanuchandrej@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "compound-design-loop",
+      "description": "Build fast, then refine through specialized lenses. Spawns parallel agent teams to run all 19 Impeccable design commands against any UI file.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Andrej Kanuch",
+        "email": "kanuchandrej@gmail.com"
+      },
+      "source": "./",
+      "category": "design",
+      "homepage": "https://github.com/andrejkanuch/compound-design-loop",
+      "tags": ["design", "ui", "ux", "review", "impeccable", "agents", "brainstorm", "iteration"]
+    }
+  ]
+}
