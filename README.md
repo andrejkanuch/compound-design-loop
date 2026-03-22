@@ -14,7 +14,8 @@ Good design is not one big decision. It is 15 small ones made through different 
 ## Install
 
 ```bash
-claude plugin install design-lenses
+claude plugin marketplace add andrejkanuch/design-lenses
+claude plugin install design-lenses@design-lenses
 ```
 
 Or test locally:
