@@ -256,14 +256,16 @@ Each domain expert below represents a real user archetype with specific constrai
 - Performance regressions in areas that were previously fast
 - Dumbing down the interface to appeal to new users at the expense of power users
 
-**Competitor Comparison Framework**:
-| Feature | Competitor A | Competitor B | This App |
+**Platform Convention Comparison Framework**:
+Instead of comparing to named competitors, evaluate against platform conventions (iOS HIG, Material Design, Web standards) and general UX best practices.
+
+| Dimension | Platform Convention | This App | Gap |
 |---|---|---|---|
-| Workflow efficiency | ? | ? | ? |
-| Customization depth | ? | ? | ? |
-| Edge case handling | ? | ? | ? |
-| Power user features | ? | ? | ? |
-| Performance consistency | ? | ? | ? |
+| Navigation pattern | Platform-standard tab bar / sidebar | ? | ? |
+| Information architecture | Flat hierarchy, progressive disclosure | ? | ? |
+| Interaction patterns | Platform gestures, haptics, transitions | ? | ? |
+| Settings organization | Grouped, searchable, logically nested | ? | ? |
+| Search behavior | Universal, ranked by relevance, recent items | ? | ? |
 
 ---
 

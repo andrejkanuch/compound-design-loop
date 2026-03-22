@@ -2,12 +2,12 @@
 
 **Build fast, then refine through specialized lenses.**
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## What It Does
 
-Compound Design Loop is a Claude Code plugin that orchestrates multi-persona design reviews. It spawns 8 specialist agents across 4 structured iterations (DIAGNOSE, FOUNDATIONS, ENHANCE, SHIP), covering all 19 [Impeccable](https://impeccable.style) design commands. Hand it any functional UI file and it takes it from "working" to "production-grade" -- critique, typography, layout, motion, accessibility, resilience, and polish in a single run.
+Compound Design Loop is a Claude Code plugin that orchestrates multi-persona design reviews. It spawns 8 specialist agents across 4 structured iterations (DIAGNOSE, FOUNDATIONS, ENHANCE, SHIP). Hand it any functional UI file and it takes it from "working" to "production-grade" -- critique, typography, layout, motion, accessibility, resilience, and polish in a single run.
 
 Good design is not one big decision. It is 15 small ones made through different lenses.
 
@@ -167,18 +167,18 @@ compound-design-loop/
 
 ### The 8 Agents
 
-| # | Agent | Impeccable Commands | Iteration | Edits File? |
-|---|-------|-------------------|-----------|-------------|
-| 1 | Design Critic | `/critique`, `/audit` | 1 - DIAGNOSE | No (research-only) |
-| 2 | Domain Expert | Domain-specific persona | 1 - DIAGNOSE | No (research-only) |
-| 3 | Design System Agent | `/normalize`, `/typeset`, `/arrange` | 2 - FOUNDATIONS | Yes (top 10 fixes) |
-| 4 | Copy & Clarity Agent | `/clarify`, `/onboard` | 2 - FOUNDATIONS | No (research-only) |
-| 5 | Motion & Delight Agent | `/animate`, `/delight`, `/colorize` | 3 - ENHANCE | Yes (animations + color) |
-| 6 | Resilience Agent | `/harden`, `/distill`, `/adapt` | 3 - ENHANCE | Yes (safety + responsive) |
-| 7 | Polish & Extract Agent | `/polish`, `/optimize`, `/extract` | 4 - SHIP | No (research-only) |
-| 8 | Bolder/Overdrive Agent | `/bolder`, `/overdrive` | 4 - SHIP | No (research-only) |
+| # | Agent | Focus Areas | Iteration | Edits File? |
+|---|-------|------------|-----------|-------------|
+| 1 | Design Critic | Visual hierarchy, accessibility audit, contrast ratios | 1 - DIAGNOSE | No (research-only) |
+| 2 | Domain Expert | Domain-specific persona evaluation | 1 - DIAGNOSE | No (research-only) |
+| 3 | Design System Agent | Spacing grid, type scale, color tokens | 2 - FOUNDATIONS | No (research-only) |
+| 4 | Copy & Clarity Agent | Labels, errors, empty states, tone | 2 - FOUNDATIONS | No (research-only) |
+| 5 | Motion & Delight Agent | Animations, celebrations, color safety | 3 - ENHANCE | No (research-only) |
+| 6 | Resilience Agent | Overflow, edge cases, responsive adaptation | 3 - ENHANCE | No (research-only) |
+| 7 | Polish & Extract Agent | Pixel alignment, performance, token extraction | 4 - SHIP | No (research-only) |
+| 8 | Bolder/Overdrive Agent | Bold amplification, signature effects | 4 - SHIP | No (research-only) |
 
-Agents marked "research-only" analyze and report findings. The orchestrator applies their recommendations during synthesis. Agents marked "Yes" may edit the file directly during their run. This prevents write conflicts -- at most 2 agents edit concurrently, and they operate on different concerns (motion vs. resilience).
+All agents are research-only -- they analyze and output findings with exact code changes. The orchestrator applies all edits during synthesis steps between iterations, resolving conflicts before any changes touch the file. This prevents write collisions and ensures consistent application.
 
 ## Principles
 
@@ -186,16 +186,17 @@ Agents marked "research-only" analyze and report findings. The orchestrator appl
 
 2. **Multi-persona brainstorm.** One person cannot hold all perspectives simultaneously. A motion designer sees opportunities an accessibility auditor would miss, and vice versa. Eight specialists find more than one generalist.
 
-3. **One command = one lens.** Each Impeccable command evaluates through a single concern. Opposing forces (/delight vs /distill, /bolder vs /harden) naturally balance each other when run in sequence.
+3. **One agent = one lens.** Each agent evaluates through a single concern. Opposing forces (delight vs distill, bolder vs harden) naturally balance each other when run in sequence.
 
-4. **Subtraction before addition.** The Resilience Agent runs /distill before /harden. The loop runs DIAGNOSE before ENHANCE. Remove what does not serve the user before adding new elements.
+4. **Subtraction before addition.** The Resilience Agent distills before hardening. The loop runs DIAGNOSE before ENHANCE. Remove what does not serve the user before adding new elements.
 
 5. **Critique sandwich.** The loop starts with critique (Iteration 1) and ends with polish (Iteration 4). Early critique identifies problems. Late polish verifies they were solved. The middle iterations do the actual work.
 
 ## Dependencies
 
 - **Required**: Claude Code with agent tool support
-- **Recommended**: [Impeccable](https://impeccable.style) plugin -- enhances agents with deeper design vocabulary and the full 19-command toolkit. The loop works standalone; agents have self-contained prompts, but Impeccable adds richer evaluation depth.
+- **No other plugins required** -- all agent prompts are fully self-contained with their own evaluation criteria, checklists, and output formats.
+- **Complementary**: [Impeccable](https://impeccable.style) -- provides individual slash commands for design concerns (critique, audit, animate, etc.). Compound Design Loop orchestrates the full pipeline. They are independent tools that work well together.
 - **Optional**: [Ralph Loop](https://github.com/nichochar/ralph-loop) -- persistent iteration loop for running multiple design passes across a session.
 
 ## Troubleshooting
@@ -204,7 +205,7 @@ Agents marked "research-only" analyze and report findings. The orchestrator appl
 |---------|----------|
 | Agent timeout | Reduce the file size or target a single component. Ensure a stable connection. Large files (3000+ lines) may exceed agent context. |
 | Context exhaustion mid-loop | The file may be too large. Review a single component instead of a full page. The loop will set status to `partial` and preserve completed work. |
-| Impeccable plugin not installed | The plugin works standalone. All agent prompts are self-contained. Impeccable enhances depth but is not required. |
+| Impeccable plugin not installed | No action needed. This plugin is fully standalone. Impeccable is a complementary tool, not a dependency. |
 | "No active design loop found" from design-status | Run `/compound-design-loop:design-loop` first. The status command reads `design-review-progress.md`, which is created by the loop. |
 | Stale progress file from a previous run | Delete `design-review-progress.md` in the target file's directory and start a fresh loop. |
 | Agents giving generic advice | Check that context gathering completed. If you skipped the questions, agents run without platform/theme/scope context and produce less relevant findings. |

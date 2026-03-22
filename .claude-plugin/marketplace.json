@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "compound-design-loop",
   "metadata": {
-    "description": "The Compound Design Loop — multi-persona brainstorm + iterative Impeccable command loop for production-grade UI redesign."
+    "description": "Orchestrates 8 specialist agents across 4 iterations to take any UI file from functional to production-grade. Covers visual hierarchy, typography, layout, accessibility, motion, resilience, and polish."
   },
   "owner": {
     "name": "Andrej Kanuch",
@@ -11,8 +11,9 @@
   "plugins": [
     {
       "name": "compound-design-loop",
-      "description": "Build fast, then refine through specialized lenses. Spawns parallel agent teams to run all 19 Impeccable design commands against any UI file.",
-      "version": "2.0.0",
+      "description": "Build fast, then refine through specialized lenses. Spawns 8 parallel specialist agents across 4 structured iterations (DIAGNOSE, FOUNDATIONS, ENHANCE, SHIP) to review and auto-fix any UI file.",
+      "version": "1.0.0",
+      "license": "MIT",
       "author": {
         "name": "Andrej Kanuch",
         "email": "kanuchandrej@gmail.com"
@@ -20,7 +21,8 @@
       "source": "./",
       "category": "design",
       "homepage": "https://github.com/andrejkanuch/compound-design-loop",
-      "tags": ["design", "ui", "ux", "review", "impeccable", "agents", "brainstorm", "iteration"]
+      "keywords": ["design", "ui", "ux", "review", "accessibility", "wcag", "typography", "animation", "css", "react", "mobile", "responsive", "design-system", "agents", "brainstorm", "iteration", "critique", "audit"],
+      "tags": ["design", "ui", "ux", "review", "accessibility", "agents", "brainstorm", "iteration", "mobile", "responsive"]
     }
   ]
 }

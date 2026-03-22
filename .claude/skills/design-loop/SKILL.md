@@ -12,8 +12,8 @@ Orchestrate a comprehensive design review through 8 specialist agents across 4 i
 Before running the design loop, verify these conditions:
 
 1. **File must exist** — the target must be an HTML, JSX, TSX, Vue, or Svelte file that already renders a functional UI. This loop refines design; it does not build features.
-2. **Git working tree must be clean** — all changes to the target file should be committed before starting. Auto-apply edits have no rollback mechanism; git is your safety net. Run `git status` and warn the user if there are uncommitted changes to the target file.
-3. **Works standalone** — this skill is self-contained. If the [Impeccable](https://impeccable.style) plugin is installed, agents gain access to its command skills for deeper analysis, but it is not required.
+2. **Target file should be committed** — the target file should have no uncommitted changes. Auto-apply edits have no rollback mechanism; git is your safety net. Run `git status` and warn the user if the target file has uncommitted changes. Other files in the working tree can have changes — only the target file matters.
+3. **Fully standalone** — this skill is self-contained. All agent prompts include their own evaluation criteria, checklists, and output formats. No other plugins are required. The [Impeccable](https://impeccable.style) plugin is a complementary tool that provides its own slash commands for individual design concerns — it is not a dependency and this skill does not call Impeccable commands.
 
 ## Input Validation
 
@@ -37,33 +37,42 @@ Parse `$ARGUMENTS` and validate:
 
 Before spawning any agents, gather five contextual signals. These shape every agent prompt — generic agents produce generic advice. Store the result as DESIGN_CONTEXT and substitute placeholders `[PLATFORM]`, `[THEME]`, `[SCOPE]`, `[CONTEXT]`, `[DOMAIN]` into all agent prompts.
 
-1. **PLATFORM** — detect from file imports/framework or ask the user:
-   - `mobile` — React Native, Expo, SwiftUI, Kotlin/Jetpack Compose
-   - `web` — standard HTML/CSS/JS, Next.js, Remix
-   - `responsive` — web with explicit mobile breakpoints
-   - `cross-platform` — React Native Web, Flutter Web, etc.
+**Auto-detect first, confirm once.** Read the file and infer as much as possible. Then print the detected values and ask the user to confirm or correct in a single message. This reduces interactive questions from 5 to 1.
 
-2. **THEME** — detect from file content (CSS variables, color scheme media queries) or ask:
-   - `dark-only` — single dark theme
-   - `light-only` — single light theme
-   - `both` — explicit light and dark themes
-   - `system-adaptive` — follows prefers-color-scheme
+1. **PLATFORM** — auto-detect from file imports/framework:
+   - `.tsx`/`.jsx` with `react-native` or `expo` imports → `mobile`
+   - `.tsx`/`.jsx` with `react-dom` or `next` imports → `web`
+   - `.html`/`.css`/`.vue`/`.svelte` → `web`
+   - `.swift`/`.kt` → `mobile`
+   - Media queries with mobile breakpoints → `responsive`
+   - Fall back to `web` if ambiguous.
 
-3. **SCOPE** — ask the user:
-   - `component` — single reusable component
-   - `page` — full screen/page
-   - `multi-screen` — flow across multiple screens
-   - `app-shell` — navigation chrome, tab bar, layout skeleton
+2. **THEME** — auto-detect from file content:
+   - Dark backgrounds (`#0`, `#1`, `#2`, `rgb(0-40,...)`, `bg-gray-900`, `bg-black`) → `dark-only`
+   - Light backgrounds (`#f`, `#e`, `bg-white`, `bg-gray-50`) → `light-only`
+   - `prefers-color-scheme` or theme toggle logic → `both`
+   - Fall back to `light-only` if ambiguous (majority of production apps).
 
-4. **CONTEXT** — ask the user about usage environment:
-   - `outdoor-use` — sunlight, glare, variable lighting
-   - `glove-constraints` — thick gloves, reduced precision
-   - `data-heavy` — dense tables, charts, dashboards
-   - `content` — reading-focused, editorial
-   - `conversion` — checkout, signup, onboarding funnel
-   - `none` — no special constraints
+3. **SCOPE** — auto-detect from file size:
+   - Under 100 lines → `component`
+   - 100–500 lines → `page`
+   - Over 500 lines → `multi-screen`
+
+4. **CONTEXT** — auto-infer from domain, then let the user override:
+   - `motorcycle` → `outdoor-use, glove-constraints`
+   - `fitness` → `outdoor-use`
+   - `finance` → `data-heavy`
+   - `ecommerce` → `conversion`
+   - `medical` → `glove-constraints`
+   - `default` → `none`
 
 5. **DOMAIN** — from `--domain` flag, or ask the user. Maps to a persona in [reference/domain-experts.md](reference/domain-experts.md).
+
+After detection, print:
+```
+Detected: [PLATFORM] | [THEME] | [SCOPE] | [DOMAIN] domain | [CONTEXT]
+Press enter to confirm, or type corrections (e.g., "theme=dark-only, scope=component").
+```
 
 If `--dry-run` is present, output the gathered context, the 8 agents that would run, the 4 iterations planned, and stop execution.
 
@@ -135,6 +144,22 @@ Scoring rules:
 - Evaluate all states: default, hover, pressed, focused, disabled, loading, error, success, empty.
 - End with 2-3 things the design does well — calibrate your credibility.
 
+End your analysis with this scoring summary table:
+
+| Dimension | Score | Justification |
+|---|---|---|
+| Visual Hierarchy | /5 | [one sentence] |
+| Information Density | /5 | [one sentence] |
+| Touch/Interaction Targets | Pass/Fail | [one sentence] |
+| Contrast Ratios | Pass/Fail | [one sentence] |
+| Emotional Resonance | /5 | [one sentence] |
+| State Differentiation | /5 | [one sentence] |
+| Typography Quality | /5 | [one sentence] |
+| Color Coherence | /5 | [one sentence] |
+| Animation Purposefulness | /5 | [one sentence] |
+| Accessibility Compliance | Pass/Fail | [one sentence] |
+| **Scaled Total** | **/35 + 3 Pass/Fail** | |
+
 DO: Evaluate as a holistic experience. Reference specific elements by name or position. Prioritize by user impact.
 DO NOT: Give everything 3/5. Skip accessibility. Ignore empty/error/loading states. Praise without specifics. Suggest vague improvements like "make it pop."
 
@@ -185,11 +210,12 @@ After BOTH agents return, synthesize before making any edits:
    - CONTRADICTION (agents disagree) — prefer Design Critic for visual/accessibility issues, Domain Expert for usability/workflow issues.
 3. **Apply fixes** using the Edit tool. Group related fixes into logical batches.
 4. **Update progress file** — check off both agents, log applied fixes with brief descriptions.
-5. **Proceed to Iteration 2.**
+5. **Print interstitial**: `"Iteration 1 (DIAGNOSE) complete: X fixes applied. Starting Iteration 2: FOUNDATIONS..."`
+6. **Proceed to Iteration 2.**
 
 ## Iteration 2 — FOUNDATIONS
 
-Launch 2 agents in parallel. Agent 3 MAY edit the file directly. Agent 4 is research-only.
+Launch 2 agents in parallel. Both agents are research-only — they analyze and report but do NOT edit the file.
 
 ### Agent 3: Design System Agent
 
@@ -206,10 +232,12 @@ Read the file at [FILE_PATH] completely. Audit and fix these subsystems:
 4. LAYOUT RHYTHM — verify consistent vertical spacing between sections. Check horizontal alignment to a shared edge grid. Verify Gestalt proximity grouping.
 5. OVERFLOW — check content at realistic widths. Will text truncate correctly? Do flex/grid items have min-width: 0? Are safe areas respected (env(safe-area-inset-*))?
 
-Apply the TOP 10 most impactful fixes directly to the file using the Edit tool. For each fix applied, note what changed and why.
+Rank the TOP 10 most impactful fixes. For each, provide the EXACT code change (old code → new code) so the orchestrator can apply it during synthesis.
 
 DO: Be precise ("card uses 14px padding, system specifies 16px"). Check every element including dividers, badges, and captions. Verify dark mode token mappings if applicable.
 DO NOT: Invent design system rules that don't exist in the file. Ignore intentional deviations without noting them.
+
+Do NOT edit the file. Output findings and code changes only.
 ```
 
 Agent role details and evaluation checklist are in [reference/agent-roles.md](reference/agent-roles.md) (Agent 3: Design System Agent).
@@ -254,11 +282,12 @@ Same protocol as Iteration 1:
 2. Categorize: CONSENSUS → apply. SINGLE-CRITICAL → apply. SINGLE-MAJOR → apply with note. SINGLE-MINOR → defer. CONTRADICTION → prefer Design System Agent for visual consistency, Copy & Clarity Agent for text and comprehension.
 3. Apply fixes using the Edit tool.
 4. Update progress file.
-5. Proceed to Iteration 3.
+5. **Print interstitial**: `"Iteration 2 (FOUNDATIONS) complete: X fixes applied. Starting Iteration 3: ENHANCE..."`
+6. Proceed to Iteration 3.
 
 ## Iteration 3 — ENHANCE
 
-Launch 2 agents in parallel. Both agents MAY edit the file directly — they add new functionality (animations, safety features) rather than modifying existing design decisions.
+Launch 2 agents in parallel. Both agents are research-only — they analyze and output specific code changes but do NOT edit the file. The orchestrator applies all changes during synthesis, resolving any conflicts before edits touch the file. This prevents concurrent edit collisions that corrupt the file.
 
 ### Agent 5: Motion & Delight Agent
 
@@ -287,10 +316,12 @@ COLOR:
 - Check sunlight readability — which elements lose contrast in bright outdoor conditions?
 - Limit changes to 6 maximum color adjustments.
 
-You MAY edit the file directly to add animation CSS, delight JS/CSS, and color fixes. For each edit, note what you added and why.
+For each proposed change, provide the EXACT code to add or modify (old code → new code) so the orchestrator can apply it during synthesis.
 
 DO: Think about animation as communication, not decoration. Use staggered delays to create rhythm. Design for the emotional moment.
 DO NOT: Add animation to everything — stillness creates contrast. Use bounce/elastic easing on data-heavy interfaces. Create animations that block user input.
+
+Do NOT edit the file. Output code changes only.
 ```
 
 Agent role details are in [reference/agent-roles.md](reference/agent-roles.md) (Agent 5: Motion & Delight Agent).
@@ -323,23 +354,26 @@ ADAPT (make it fit everywhere):
 - Check safe area insets — does content clear the notch, dynamic island, home indicator?
 - Check landscape — does the layout handle rotation or should it lock to portrait?
 
-You MAY edit the file directly to add safety features: overflow protection, confirmation dialogs, error states, responsive fixes. For each edit, note what you added and why.
+For each proposed change, provide the EXACT code to add or modify (old code → new code) so the orchestrator can apply it during synthesis.
 
 DO: Test extremes first — the happy path is already handled. Consider interruptions (phone call mid-flow, notification during recording). Simplify so edge cases become normal cases.
 DO NOT: Add complexity to handle edge cases — reduce complexity. Assume consistent network. Ignore platform conventions (iOS safe areas, Android nav bar).
+
+Do NOT edit the file. Output code changes only.
 ```
 
 Agent role details are in [reference/agent-roles.md](reference/agent-roles.md) (Agent 6: Resilience Agent).
 
 ### Synthesis Protocol (Iteration 3)
 
-Both agents in this iteration may edit the file. After both return:
+Both agents are research-only in this iteration. After both return:
 
-1. Read both outputs and review all edits they made.
-2. Check for conflicts — if both agents edited the same element, resolve in favor of the change that improves safety/resilience (Resilience Agent wins ties on structural changes, Motion Agent wins on animation/color).
-3. Apply any remaining research findings using the Edit tool.
+1. Read both outputs completely.
+2. Categorize: CONSENSUS → apply. SINGLE-CRITICAL → apply. SINGLE-MAJOR → apply with note. SINGLE-MINOR → defer. CONTRADICTION → Resilience Agent wins on structural/safety changes, Motion Agent wins on animation/color.
+3. Apply all changes using the Edit tool, resolving any overlapping element edits before writing.
 4. Update progress file.
-5. Proceed to Iteration 4.
+5. **Print interstitial**: `"Iteration 3 (ENHANCE) complete: X fixes applied. Starting Iteration 4: SHIP..."`
+6. Proceed to Iteration 4.
 
 ## Iteration 4 — SHIP
 
@@ -426,7 +460,7 @@ After both agents return:
 These anti-patterns will break the loop or produce bad results:
 
 - **NEVER spawn more than 2 agents simultaneously** — Claude Code has practical concurrency limits; 2 agents is reliable, 3+ will timeout or produce truncated output.
-- **NEVER allow research-only agents to edit the file** — when multiple agents edit concurrently, conflicting writes corrupt the file. Only agents explicitly marked "MAY edit" should use the Edit tool.
+- **NEVER allow agents to edit the file directly** — only the orchestrator edits the file during synthesis steps. Agents analyze and output code changes; the orchestrator applies them after resolving conflicts.
 - **NEVER skip the synthesis step** — applying one agent's fixes without reading the other agent's output produces inconsistency. Both outputs inform the merge.
 - **NEVER run delight before distill** — adding personality to cluttered UI makes it worse. Subtract first, then add character to what remains.
 - **NEVER run on uncommitted changes** — auto-apply edits have no undo. Git is the only rollback mechanism. Verify clean working tree in Prerequisites.

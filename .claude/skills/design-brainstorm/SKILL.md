@@ -39,15 +39,23 @@ Then read the file and build `DESIGN_CONTEXT` automatically:
 
 4. **Domain**: Use the `--domain` flag value, or "default" if omitted.
 
+5. **Context**: Infer from domain to provide environmental constraints without asking the user:
+   - `motorcycle` → `outdoor-use, glove-constraints` (sunlight, vibration, gloved fingers)
+   - `fitness` → `outdoor-use` (sunlight, sweat, bouncing, oxygen-depleted)
+   - `finance` → `data-heavy` (information density, long sessions, eye strain)
+   - `ecommerce` → `conversion` (checkout flow, trust signals, speed)
+   - `medical` → `glove-constraints` (nitrile gloves, high-stress, one-hand operation)
+   - `default` → `none`
+
 Print the detection result before launching agents:
 
 ```
-Detected: [PLATFORM] | [THEME] theme | [SCOPE] | [DOMAIN] domain
+Detected: [PLATFORM] | [THEME] theme | [SCOPE] | [DOMAIN] domain | [CONTEXT] context
 ```
 
-Example: `Detected: Mobile (React Native) | Dark theme | Page/Screen | motorcycle domain`
+Example: `Detected: Mobile (React Native) | Dark theme | Page/Screen | motorcycle domain | outdoor-use, glove-constraints`
 
-Store these four values as `PLATFORM`, `THEME`, `SCOPE`, and `DOMAIN` for use in agent prompts below.
+Store these five values as `PLATFORM`, `THEME`, `SCOPE`, `DOMAIN`, and `CONTEXT` for use in agent prompts below.
 
 
 ## Launch 3 Agents
@@ -59,7 +67,7 @@ Spawn all 3 agents in parallel using the Agent tool. Each agent reads the target
 Send this prompt to the Agent tool:
 
 ```
-You are a senior UI designer specializing in [PLATFORM] [THEME]-theme interfaces.
+You are a senior UI designer specializing in [PLATFORM] [THEME]-theme interfaces designed for [CONTEXT] usage.
 
 Read the file at [FILE_PATH] and evaluate it as a [SCOPE]-level [PLATFORM] design.
 
@@ -81,8 +89,7 @@ DO NOT edit the file. This is a brainstorm — research only. Use the Read tool 
 
 ### Agent 2: Domain Expert
 
-First, read the domain expert persona from this reference file:
-`/Users/andrejmacm5/personal/compound-design-loop/.claude/skills/design-loop/reference/domain-experts.md`
+First, read the domain expert persona from the reference file at `reference/domain-experts.md` (relative to the design-loop skill directory, which is a sibling of this skill's directory: `../design-loop/reference/domain-experts.md`).
 
 Select the section matching `DOMAIN`:
 - "motorcycle" → Section 1 (15-year rider, glove-friendly, sunlight-readable)
@@ -101,7 +108,7 @@ You are adopting the following persona for this design review:
 
 Now read the file at [FILE_PATH].
 
-Evaluate this [SCOPE]-level [PLATFORM] interface from your perspective as described above. Go through each of your evaluation criteria and score the design honestly.
+Evaluate this [SCOPE]-level [PLATFORM] interface designed for [CONTEXT] usage from your perspective as described above. Go through each of your evaluation criteria and score the design honestly.
 
 Answer these two questions in detail:
 - "What would a real [DOMAIN] user LOVE about this design?"
@@ -122,7 +129,7 @@ DO NOT edit the file. This is a brainstorm — research only. Use the Read tool 
 Send this prompt to the Agent tool:
 
 ```
-You are a motion designer who worked on [PLATFORM] system animations — the fluid transitions, spring curves, and micro-interactions that make the platform feel alive.
+You are a motion designer who worked on [PLATFORM] system animations — the fluid transitions, spring curves, and micro-interactions that make the platform feel alive. This interface is designed for [CONTEXT] usage in the [DOMAIN] domain.
 
 Read the file at [FILE_PATH] and evaluate it as a [SCOPE]-level [PLATFORM] [THEME]-theme interface.
 
