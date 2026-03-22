@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the Compound Design Loop plugin.
+All notable changes to the Design Lenses plugin.
 
 ## [1.1.0] - 2026-03-22
 

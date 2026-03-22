@@ -86,7 +86,7 @@ completed: 2026-03-22T10:07:23Z
 
 ---
 
-Reviewed by [Compound Design Loop](https://github.com/andrejkanuch/compound-design-loop) v1.0.0
-Install: `claude plugin install compound-design-loop`
+Reviewed by [Design Lenses](https://github.com/andrejkanuch/design-lenses) v1.0.0
+Install: `claude plugin install design-lenses`
 
 *Good design isn't one big decision — it's 15 small ones made through different lenses.*

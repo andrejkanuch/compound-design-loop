@@ -1,5 +1,5 @@
 {
-  "name": "compound-design-loop",
+  "name": "design-lenses",
   "description": "Orchestrates 8 specialist agents across 4 iterations to take any UI file from functional to production-grade. Covers visual hierarchy, typography, layout, accessibility, motion, resilience, and polish.",
   "version": "1.1.0",
   "license": "MIT",
@@ -7,8 +7,8 @@
     "name": "Andrej Kanuch",
     "email": "kanuchandrej@gmail.com"
   },
-  "homepage": "https://github.com/andrejkanuch/compound-design-loop",
-  "repository": "https://github.com/andrejkanuch/compound-design-loop",
+  "homepage": "https://github.com/andrejkanuch/design-lenses",
+  "repository": "https://github.com/andrejkanuch/design-lenses",
   "keywords": ["design", "ui", "ux", "review", "accessibility", "agents", "brainstorm"],
   "skills": "./.claude/skills"
 }

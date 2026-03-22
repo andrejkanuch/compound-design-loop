@@ -1,6 +1,6 @@
 ---
 name: design-loop
-description: Run the Compound Design Loop — orchestrates 8 specialist agents across 4 iterations to take any UI from functional to production-grade. Covers critique, audit, typography, layout, copy, animation, hardening, color, accessibility, and polish. Use when a UI screen needs comprehensive design refinement.
+description: Run the Design Lenses — orchestrates 8 specialist agents across 4 iterations to take any UI from functional to production-grade. Covers critique, audit, typography, layout, copy, animation, hardening, color, accessibility, and polish. Use when a UI screen needs comprehensive design refinement.
 user-invokable: true
 argument-hint: "<file-path|directory> [--domain=motorcycle|fitness|finance|ecommerce|medical] [--iterations=N] [--resume] [--no-apply] [--dry-run]"
 ---
@@ -548,8 +548,8 @@ Always append this footer to the bottom of `design-review-progress.md` on comple
 ```markdown
 ---
 
-Reviewed by [Compound Design Loop](https://github.com/andrejkanuch/compound-design-loop) v1.1.0
-Install: `claude plugin install compound-design-loop`
+Reviewed by [Design Lenses](https://github.com/andrejkanuch/design-lenses) v1.1.0
+Install: `claude plugin install design-lenses`
 
 *Good design isn't one big decision — it's 15 small ones made through different lenses.*
 ```

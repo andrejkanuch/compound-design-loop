@@ -1,6 +1,6 @@
 ---
 name: design-status
-description: Check progress of a running Compound Design Loop. Shows current phase, completed agents, applied fixes, and remaining work. Use anytime during or after a design loop to see where things stand.
+description: Check progress of a running Design Lenses. Shows current phase, completed agents, applied fixes, and remaining work. Use anytime during or after a design loop to see where things stand.
 user-invokable: true
 ---
 
@@ -15,7 +15,7 @@ Search for `design-review-progress.md` in the following locations, in order:
 3. Any subdirectory — use a glob search like `**/design-review-progress.md`
 
 If no progress file is found, output:
-> No active design loop found. Start one with `/compound-design-loop:design-loop <file>`
+> No active design loop found. Start one with `/design-lenses:design-loop <file>`
 
 If multiple progress files are found, list all of them with their full paths and ask the user which one they want to inspect. Do not guess.
 
@@ -133,4 +133,4 @@ For partial completions, look for a reason field or infer the stopping point fro
 - NEVER write any changes back to the target file being reviewed
 - NEVER guess at data that is not present in the progress file — report only what is recorded
 
-Run `/compound-design-loop:design-loop` to start a new loop, or continue an existing one.
+Run `/design-lenses:design-loop` to start a new loop, or continue an existing one.

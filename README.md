@@ -1,4 +1,4 @@
-# Compound Design Loop
+# Design Lenses
 
 **Build fast, then refine through specialized lenses.**
 
@@ -7,26 +7,26 @@
 
 ## What It Does
 
-Compound Design Loop is a Claude Code plugin that orchestrates multi-persona design reviews. It spawns 8 specialist agents across 4 structured iterations (DIAGNOSE, FOUNDATIONS, ENHANCE, SHIP). Hand it any functional UI file and it takes it from "working" to "production-grade" -- critique, typography, layout, motion, accessibility, resilience, and polish in a single run.
+Design Lenses is a Claude Code plugin that orchestrates multi-persona design reviews. It spawns 8 specialist agents across 4 structured iterations (DIAGNOSE, FOUNDATIONS, ENHANCE, SHIP). Hand it any functional UI file and it takes it from "working" to "production-grade" -- critique, typography, layout, motion, accessibility, resilience, and polish in a single run.
 
 Good design is not one big decision. It is 15 small ones made through different lenses.
 
 ## Install
 
 ```bash
-claude plugin install compound-design-loop
+claude plugin install design-lenses
 ```
 
 Or test locally:
 
 ```bash
-claude --plugin-dir /path/to/compound-design-loop
+claude --plugin-dir /path/to/design-lenses
 ```
 
 ## Quick Start
 
 ```bash
-/compound-design-loop:design-loop src/dashboard.tsx --domain=finance
+/design-lenses:design-loop src/dashboard.tsx --domain=finance
 ```
 
 Here is what happens when you run it:
@@ -45,7 +45,7 @@ A full loop typically takes 5-10 minutes depending on file size and complexity.
 
 ## Commands
 
-### `/compound-design-loop:design-loop <file|dir> [flags]`
+### `/design-lenses:design-loop <file|dir> [flags]`
 
 The full loop. 8 agents, 4 iterations, auto-applied fixes between each round.
 
@@ -71,11 +71,11 @@ The full loop. 8 agents, 4 iterations, auto-applied fixes between each round.
 
 **Multi-file mode:** When given multiple files or a directory, runs the loop on each file sequentially with shared context and cross-file design token consistency.
 
-### `/compound-design-loop:design-brainstorm <file> [--domain=X]`
+### `/design-lenses:design-brainstorm <file> [--domain=X]`
 
 Quick 3-agent brainstorm without the full loop. Spawns a Design Critic, Domain Expert, and a generalist UX reviewer in parallel. No file editing -- returns prioritized findings for you to act on manually. Use this for early-stage feedback before committing to a full loop.
 
-### `/compound-design-loop:design-status`
+### `/design-lenses:design-status`
 
 Check progress of a running design loop. Reads the `design-review-progress.md` file created by design-loop and reports which iterations have completed, which agents have run, and what fixes have been applied so far.
 
@@ -151,7 +151,7 @@ Each domain preset includes competitor comparisons, environmental constraints, a
 ### File Structure
 
 ```
-compound-design-loop/
+design-lenses/
 |-- .claude-plugin/
 |   |-- plugin.json                              Plugin metadata, version, keywords
 |   |-- marketplace.json                         Marketplace listing and tags
@@ -208,7 +208,7 @@ All agents are research-only -- they analyze and output findings with exact code
 
 - **Required**: Claude Code with agent tool support
 - **No other plugins required** -- all agent prompts are fully self-contained with their own evaluation criteria, checklists, and output formats.
-- **Complementary**: [Impeccable](https://impeccable.style) -- provides individual slash commands for design concerns (critique, audit, animate, etc.). Compound Design Loop orchestrates the full pipeline. They are independent tools that work well together.
+- **Complementary**: [Impeccable](https://impeccable.style) -- provides individual slash commands for design concerns (critique, audit, animate, etc.). Design Lenses orchestrates the full pipeline. They are independent tools that work well together.
 - **Optional**: [Ralph Loop](https://github.com/nichochar/ralph-loop) -- persistent iteration loop for running multiple design passes across a session.
 
 ## Examples
@@ -217,7 +217,7 @@ The `examples/` directory contains a sample before-file and a completed progress
 
 - **[dashboard-before.html](examples/dashboard-before.html)** -- a motorcycle ride dashboard with common design issues (small tap targets, off-grid spacing, missing accessibility, no animations). Run the loop on it:
   ```bash
-  /compound-design-loop:design-loop examples/dashboard-before.html --domain=motorcycle
+  /design-lenses:design-loop examples/dashboard-before.html --domain=motorcycle
   ```
 
 - **[sample-progress.md](examples/sample-progress.md)** -- what a completed progress file looks like after a full 4-iteration run. Shows 23 fixes across 8 categories with the synthesis categorization in action.
@@ -229,7 +229,7 @@ The `examples/` directory contains a sample before-file and a completed progress
 | Agent timeout | Reduce the file size or target a single component. Ensure a stable connection. Large files (3000+ lines) may exceed agent context. |
 | Context exhaustion mid-loop | The file may be too large. Review a single component instead of a full page. The loop will set status to `partial` and preserve completed work. |
 | Impeccable plugin not installed | No action needed. This plugin is fully standalone. Impeccable is a complementary tool, not a dependency. |
-| "No active design loop found" from design-status | Run `/compound-design-loop:design-loop` first. The status command reads `design-review-progress.md`, which is created by the loop. |
+| "No active design loop found" from design-status | Run `/design-lenses:design-loop` first. The status command reads `design-review-progress.md`, which is created by the loop. |
 | Stale progress file from a previous run | Delete `design-review-progress.md` in the target file's directory and start a fresh loop. |
 | Agents giving generic advice | Check that context gathering completed. If you skipped the questions, agents run without platform/theme/scope context and produce less relevant findings. |
 | File corrupted after loop | Run `git diff` to review changes and `git checkout -- <file>` to revert. This is why the loop requires a clean git working tree before starting. |
@@ -242,7 +242,7 @@ Contributions are welcome. Here is how to extend the plugin:
 
 - **Modifying an agent**: Edit the agent's prompt in `.claude/skills/design-loop/SKILL.md` and update its role definition in `.claude/skills/design-loop/reference/agent-roles.md`. Keep the prompt structure consistent (mission, checklist, output format, DO/DON'T).
 
-- **Testing locally**: Run `claude --plugin-dir ./` from the repository root, then invoke `/compound-design-loop:design-brainstorm test.html` to verify your changes with a quick brainstorm before testing the full loop.
+- **Testing locally**: Run `claude --plugin-dir ./` from the repository root, then invoke `/design-lenses:design-brainstorm test.html` to verify your changes with a quick brainstorm before testing the full loop.
 
 - **Adding a reference file**: Place it in `.claude/skills/design-loop/reference/` and reference it from the agent prompts in `SKILL.md`.
 

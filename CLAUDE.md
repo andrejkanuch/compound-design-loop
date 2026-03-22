@@ -1,11 +1,11 @@
-# Compound Design Loop — Development Guide
+# Design Lenses — Development Guide
 
 ## Purpose
 Claude Code plugin that orchestrates multi-persona design reviews through parallel agent teams and 19 Impeccable design commands.
 
 ## Repository Structure
 ```
-compound-design-loop/
+design-lenses/
 ├── .claude-plugin/          # Plugin manifest + marketplace metadata
 ├── .claude/skills/          # 3 skills (design-loop, design-brainstorm, design-status)
 │   └── design-loop/reference/  # Modular knowledge files
@@ -29,7 +29,7 @@ When bumping version, update ALL of these:
 - [ ] CHANGELOG.md updated with changes
 
 ## Development & Testing
-Test locally: `claude --plugin-dir /path/to/compound-design-loop`
+Test locally: `claude --plugin-dir /path/to/design-lenses`
 Reload in session: `/reload-plugins`
 Verify skills: `/help` should show all 3 skills
 

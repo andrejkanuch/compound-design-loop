@@ -187,7 +187,7 @@ Read through all three agent responses and produce this exact structure:
 [Any recommendations from the Domain Expert that are unique to the [DOMAIN] context and would not appear in a generic design review. These are the highest-signal items.]
 
 ### Next Step
-Run `/compound-design-loop:design-loop [FILE_PATH] --domain=[DOMAIN]` for the full 4-iteration treatment.
+Run `/design-lenses:design-loop [FILE_PATH] --domain=[DOMAIN]` for the full 4-iteration treatment.
 ```
 
 Prioritization rules for the Top 5:
